@@ -1,0 +1,41 @@
+:root {
+  /* color */
+  --color-not-match: #3A3A3C;
+  --color-word_exist: #B59F3B;
+  --color-match: #538D4E;
+  --color-black: #3f454d;
+  --color-font : #ffffff;
+
+  /* size */
+
+/* animation */
+--animation-duration: 300ms;
+
+}
+
+body {
+  height: 80vh;
+  display: flex;
+  background-color: var(--color-black);
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.board {
+  display: flex;
+  flex-direction: column;
+}
+
+button {
+  width: 6vh;
+  height: 6vh;
+  background-color: var(--color-not-match);
+  margin: 0.1vh 0.1vh 0.5vh 0.1vh;
+  font-size: 3vh;
+  color: var(--color-font);
+  font-family: Arial, Helvetica, sans-serif;
+  font-weight: 600;
+  transition: transform var(--animation-duration) ease;
+}
+
