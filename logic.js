@@ -1,11 +1,16 @@
 function initGame() {
   drawBoard();
   setEventListeners();
+  
 }
 
 function drawBoard() {
+  fetch("http://localhost:8080/struts1/bbs.do?method=restApi")
+  .then((response) => response.json())
+  .then((data) => {TODAY_WORDLE = [...data.result]; console.log(TODAY_WORDLE)});
   const BOARD_ROW = 6;
   const board = document.querySelector(".board");
+  board.innerHTML = "";
   const makeRow = function (rowNumber) {
     return `
     <section class="row${rowNumber}">
@@ -25,12 +30,35 @@ function drawBoard() {
 let CUR_ROW = 1;
 let CUR_COLUMN = 0;
 // let TODAY_WORDLE = ["C", "L", "O", "N", "E"];
-let TODAY_WORDLE = ["K", "H", "A", "K", "I"];
+let TODAY_WORDLE = ["P", "O", "K", "E", "R"];
+let isAnim = false;
+let isGameOver = false;
+let isSuccess = false;
 
 function setEventListeners() {
   const body = document.querySelector("body");
   const board = document.querySelector(".board");
+  const popUpClose = document.querySelector('.btn_close');
+  
+  popUpClose.addEventListener('click', () => {
+    document.querySelector('#pop_info_1').style.display = 'none';
+    CUR_ROW = 1;
+    CUR_COLUMN = 0;
+    // let TODAY_WORDLE = ["C", "L", "O", "N", "E"];
+    isAnim = false;
+    isGameOver = false;
+    drawBoard();
+
+
+  })
   body.addEventListener("keydown", (event) => {
+    if(isAnim){
+      return;
+    }
+    if(isGameOver){
+      return;
+    }
+    const xRow = board.querySelector(`.row${CUR_ROW}`);
     const curRow = board.querySelectorAll(`.row${CUR_ROW} button`);
     if (event.key == "Backspace") {
       if (CUR_COLUMN > 5) {
@@ -42,7 +70,7 @@ function setEventListeners() {
       curBtn.innerHTML = "&nbsp";
       CUR_COLUMN--;
     }
-    console.log(CUR_COLUMN);
+
 
     const checkKey = /^[a-zA-Z]$/gim;
     if (checkKey.test(event.key)) {
@@ -70,52 +98,117 @@ function setEventListeners() {
     }
 
     if (event.key == "Enter") {
-      if (checkWord(curRow, CUR_COLUMN)) {
-        CUR_ROW++;
-        CUR_COLUMN = 0;
+      if (CUR_COLUMN < 5) {
+        if(!isAnim){
+          isAnim = true;
+          xRow.animate(
+            {
+              transform: [
+                "translate(10px, 0)", // 시작 값
+                "translate(-10px, 0)", // 종료 값
+                "translate(10px, 0)", // 종료 값
+                "translate(-10px, 0)", // 종료 값
+                "translate(10px, 0)", // 종료 값
+                "translate(0px, 0)", // 종료 값
+              ],
+            },
+            {
+              duration: 500, // 밀리초 지정
+              fill: "forwards", // 종료 시 속성을 지님
+              easing: "ease-in-out", // 가속도 종류
+            }
+  
+          ).onfinish = (() => {isAnim = false;})
+  
+        }
+        return;
       }
+      if(!isAnim){
+        isAnim = true;
+      xRow.animate(
+        {
+          transform: [
+            "rotateX(0deg)", // 시작 값
+            "rotateX(90deg)",
+          ],
+        },
+        {
+          duration: 500, // 밀리초 지정
+          fill: "forwards", // 종료 시 속성을 지님
+          easing: "ease-out", // 가속도 종류
+        }
+      ).onfinish = () => {
+
+        checkWord(curRow);
+          xRow.animate(
+          {
+            transform: [
+              "rotateX(90deg)", // 시작 값
+              "rotateX(0deg)",
+            ],
+          },
+          {
+            duration: 500, // 밀리초 지정
+            fill: "forwards", // 종료 시 속성을 지님
+            easing: "ease-out", // 가속도 종류
+          }
+        ).onfinish = () => {isAnim = false;};
+      };
+      CUR_ROW++;
+      CUR_COLUMN = 0;
+      if(CUR_ROW > 6){
+        if(isSuccess){
+          return;
+        }
+        setTimeout(() => {
+          document.querySelector('#pop_info_1').style.display = 'inline';
+          document.querySelector('.dsc').textContent = "실패했습니다..";
+        }, 1000);
+        
+        isGameOver = true;
+      }
+    }
     }
   });
 }
 
 //오늘의 단어는 CLONE
 
-function checkWord(curRow, isFull) {
-  if (isFull < 5) {
-    return false;
-  }
-
-  let wordDigit = [0, 1, 2, 3, 4];
+function checkWord(curRow) {
   let colorExist = "#B59F3B";
   let colorMatch = "#538D4E";
   let copyTodayWordle = TODAY_WORDLE.slice();
 
   //match
-  for (let i = 0; i < wordDigit.length; i++) {
+  for (let i = 0; i < curRow.length; i++) {
     if (copyTodayWordle[i] == curRow[i].textContent) {
       curRow[i].style.backgroundColor = colorMatch;
-      wordDigit[i] = -1;
       copyTodayWordle[i] = "";
     }
   }
   copyTodayWordle.join().replaceAll(",", "");
 
   if (copyTodayWordle.join().replaceAll(",", "") == "") {
-    console.log("정답!");
+    setTimeout(() => {
+      document.querySelector('#pop_info_1').style.display = 'inline';
+      document.querySelector('.dsc').textContent = "성공했습니다!!";
+    }, 1000);
+    
+    isSuccess = true;
   }
 
   //exist
-  for (let i = 0; i < wordDigit.length; i++) {
+  for (let i = 0; i < curRow.length; i++) {
     for (let j = 0; j < copyTodayWordle.length; j++) {
-      if (wordDigit[i] == -1) {
-        break;
-      }
+
       if (curRow[i].textContent == copyTodayWordle[j]) {
         curRow[i].style.backgroundColor = colorExist;
-        copyTodayWordle[i] = "";
+        copyTodayWordle[j] = "";
+        break;
       }
     }
   }
+
   return true;
 }
 
