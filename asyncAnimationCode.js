@@ -9,6 +9,8 @@ var KEYFRAMES = {
   br: [{ background: "#b64598" }, { background: "#444444" }, { background: "#b64598" }],
 };
 
+
+//콜백방식
 var box = document.querySelector(".callback");
 var anim1 = box.animate(KEYFRAMES.o, 1000);
 anim1.onfinish = function () {
@@ -21,6 +23,8 @@ anim1.onfinish = function () {
   };
 };
 
+
+//프로미스 방식
 var box2 = document.querySelector(".promise");
 var animA = box2.animate(KEYFRAMES.o, 1000);
 animA.finished
