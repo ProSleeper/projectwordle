@@ -1,18 +1,22 @@
-function initGame() {
-  updateWord();
+"use strict";
+window.addEventListener("load", () => {
+  init();
+});
+
+let CUR_ROW = 1;            //현재 작성 가능한 ROW
+let CUR_COLUMN = 0;         //현재 작성 가능한 COLUMN
+let TODAY_WORDLE = "TWICE"; //오늘의 단어, 서버에서 받아오는 걸로 처리하면 나름 괜찮을 듯
+let isGameOver = false;     //게임 실패 체크
+let isSuccess = false;      //게임 성공 체크
+
+//초기화
+function init() {
+  //updateWord();
   drawBoard();
   setEventListeners();
 }
 
-function updateWord() {
-  // fetch("http://localhost:8080/struts1/bbs.do?method=restApi")
-  //   .then((response) => response.json())
-  //   .then((data) => {
-  //     TODAY_WORDLE = data.result.toUpperCase();
-  //     console.log(TODAY_WORDLE);
-  //   });
-}
-
+//게임화면 초기화
 function drawBoard() {
   const BOARD_ROW = 6;
   const board = document.querySelector(".board");
@@ -33,35 +37,28 @@ function drawBoard() {
   }
 }
 
-let CUR_ROW = 1;
-let CUR_COLUMN = 0;
-let TODAY_WORDLE = "NEVER";
-let isAnim = false;
-let isGameOver = false;
-let isSuccess = false;
-
+//이벤트 리스너 등록
 function setEventListeners() {
+  registKeyEvent();
+  registRestartBtn();
+}
+
+//다시하기 버튼 등록
+function registRestartBtn() {
+  const restartBtn = document.querySelector(".btn_close");
+  restartBtn.addEventListener("click", () => {
+    restart();
+  });
+}
+
+//키 입력 이벤트 등록
+function registKeyEvent() {
   const body = document.querySelector("body");
   const board = document.querySelector(".board");
-  const popUpClose = document.querySelector(".btn_close");
-
-  popUpClose.addEventListener("click", () => {
-    document.querySelector("#pop_info_1").style.display = "none";
-    CUR_ROW = 1;
-    CUR_COLUMN = 0;
-    isAnim = false;
-    isGameOver = false;
-    updateWord();
-    drawBoard();
-  });
   body.addEventListener("keydown", (event) => {
-    if (isAnim) {
-      return;
-    }
     if (isGameOver) {
       return;
     }
-    const xRow = board.querySelector(`.row${CUR_ROW}`);
     const curRow = board.querySelectorAll(`.row${CUR_ROW} button`);
     if (event.key == "Backspace") {
       if (CUR_COLUMN > 5) {
@@ -83,160 +80,112 @@ function setEventListeners() {
       }
       const curBtn = curRow[CUR_COLUMN];
       curBtn.textContent = event.key.toUpperCase();
-      curBtn.animate(
-        {
-          transform: [
-            "scale(1.2)", // 시작 값
-            "scale(1)", // 종료 값
-          ],
-        },
-        {
-          duration: 300, // 밀리초 지정
-          fill: "forwards", // 종료 시 속성을 지님
-          easing: "ease", // 가속도 종류
-        }
-      );
       CUR_COLUMN++;
     }
 
     if (event.key == "Enter") {
+      console.log(CUR_COLUMN);
       if (CUR_COLUMN < 5) {
-        if (!isAnim) {
-          isAnim = true;
-          xRow.animate(
-            {
-              transform: [
-                "translate(10px, 0)", // 시작 값
-                "translate(-10px, 0)", // 종료 값
-                "translate(10px, 0)", // 종료 값
-                "translate(-10px, 0)", // 종료 값
-                "translate(10px, 0)", // 종료 값
-                "translate(0px, 0)", // 종료 값
-              ],
-            },
-            {
-              duration: 500, // 밀리초 지정
-              fill: "forwards", // 종료 시 속성을 지님
-              easing: "ease-in-out", // 가속도 종류
-            }
-          ).onfinish = () => {
-            isAnim = false;
-          };
-        }
         return;
       }
-      if (!isAnim) {
-        isAnim = true;
-        xRow.animate(
-          {
-            transform: [
-              "rotateX(0deg)", // 시작 값
-              "rotateX(90deg)",
-            ],
-          },
-          {
-            duration: 500, // 밀리초 지정
-            fill: "forwards", // 종료 시 속성을 지님
-            easing: "ease-out", // 가속도 종류
-          }
-        ).onfinish = () => {
-          checkWord(curRow);
-          xRow.animate(
-            {
-              transform: [
-                "rotateX(90deg)", // 시작 값
-                "rotateX(0deg)",
-              ],
-            },
-            {
-              duration: 500, // 밀리초 지정
-              fill: "forwards", // 종료 시 속성을 지님
-              easing: "ease-out", // 가속도 종류
-            }
-          ).onfinish = () => {
-            isAnim = false;
-          };
-        };
-        CUR_ROW++;
-        CUR_COLUMN = 0;
-        if (CUR_ROW > 6) {
-          if (isSuccess) {
-            return;
-          }
-          setTimeout(() => {
-            document.querySelector("#pop_info_1").style.display = "inline";
-            document.querySelector(".dsc").textContent = "실패했습니다..";
-          }, 1000);
 
-          isGameOver = true;
+      if (checkWord(curRow)) {
+        viewResult("성공했습니다.", "inline")
+        isSuccess = true;
+        isGameOver = true;
+      }
+
+      CUR_ROW++;
+      CUR_COLUMN = 0;
+      if (CUR_ROW > 6) {
+        if (isSuccess) {
+          return;
         }
+        viewResult("실패했습니다..", "inline")
+        isGameOver = true;
       }
     }
   });
 }
 
+//입력한 글자 검사.
 function checkWord(curRow) {
-  let EXIST_BG_COLOR = "#B59F3B";
-  let MATCH_BG_COLOR = "#538D4E";
   let arrTodayWord = [...TODAY_WORDLE];
   let arrInputWord = [];
-  let isCorrectAnswer = true;
-
+  let isPerfect = false;
   curRow.forEach((element) => {
     arrInputWord.push(element.textContent);
   });
 
+  isPerfect = checkMatch(arrInputWord , arrTodayWord, curRow);
+  checkExist(arrInputWord , arrTodayWord, curRow);
+  return isPerfect;
+}
+
+//자리와 글자 모두 일치 검사
+function checkMatch(input, today, cur) {
+  let MATCH_BG_COLOR = "#538D4E";
+  let isAnswer = true;
   //match
-  for (let i = 0; i < arrInputWord.length; i++) {
-    if (arrTodayWord[i] == arrInputWord[i]) {
-      curRow[i].style.backgroundColor = MATCH_BG_COLOR;
-      arrTodayWord[i] = "";
-      arrInputWord[i] = "";
+  for (let i = 0; i < input.length; i++) {
+    if (today[i] == input[i]) {
+      cur[i].style.backgroundColor = MATCH_BG_COLOR;
+      today[i] = "";
+      input[i] = "";
       continue;
     }
-    isCorrectAnswer = false;
+    isAnswer = false;
   }
 
-  //exist
-  for (let i = 0; i < arrInputWord.length; i++) {
-    for (let j = 0; j < arrTodayWord.length; j++) {
-      if (arrInputWord[i] == "") {
+  return isAnswer;
+}
+
+//자리 일치 검사
+function checkExist(input, today, cur) {
+  let EXIST_BG_COLOR = "#B59F3B";
+  //match
+  for (let i = 0; i < input.length; i++) {
+    for (let j = 0; j < today.length; j++) {
+      if (input[i] == "") {
         break;
       }
 
-      if (arrInputWord[i] == arrTodayWord[j]) {
-        curRow[i].style.backgroundColor = EXIST_BG_COLOR;
-        arrTodayWord[j] = "";
-        arrInputWord[i] = "";
+      if (input[i] == today[j]) {
+        cur[i].style.backgroundColor = EXIST_BG_COLOR;
+        today[j] = "";
+        input[i] = "";
         break;
       }
     }
-
-    //correctAnswer
-    if (isCorrectAnswer) {
-      return true;
-    }
-    return false;
   }
 }
 
-var KEYFRAMES = {
-  o: [{ opacity: 1 }, { opacity: 0 }, { opacity: 1 }],
-  t: [{ transform: "translateX(0)" }, { transform: "translateX(200px)" }, { transform: "translateX(0)" }],
-  r: [{ transform: "rotate(0deg)" }, { transform: "rotate(200deg)" }, { transform: "rotate(0deg)" }],
-  bb: [{ background: "#4598b6" }, { background: "#444444" }, { background: "#4598b6" }],
-  br: [{ background: "#b64598" }, { background: "#444444" }, { background: "#b64598" }],
-};
+//결과 화면 출력
+function viewResult(message, visible) {
+  setTimeout(() => {
+    document.querySelector("#pop_info_1").style.display = visible;
+    document.querySelector(".dsc").textContent = message;
+  }, 500);
+}
 
+//게임 데이터 초기화
+function restart() {
+  document.querySelector("#pop_info_1").style.display = "none";
+  CUR_ROW = 1;
+  CUR_COLUMN = 0;
+  isGameOver = false;
+  isSuccess = false;
+  //updateWord();
+  drawBoard();
+}
 
-
-//애니메이션부터 수정하면 될듯.
-function blankAnimation(params) {}
-
-function blankAnimation(params) {}
-
-function blankAnimation(params) {}
-
-window.addEventListener("load", () => {
-  initGame();
-});
+//서버에 요청해서 단어 받아오기
+//당연하지만 서버가 켜져있어야하고, 요청을 처리 할 수 있어야 한다.
+// function updateWord() {
+//   fetch("http://localhost:8080/struts1/bbs.do?method=restApi")
+//     .then((response) => response.json())
+//     .then((data) => {
+//       TODAY_WORDLE = data.result.toUpperCase();
+//       console.log(TODAY_WORDLE);
+//     });
+// }
