@@ -7,18 +7,12 @@
   --color-font: #ffffff;
 
   /* size */
+  --size-font-weight: 600px;
+    --size-button: 6vh;
 
   /* animation */
   --animation-duration: 300ms;
 
-}
-
-a {
-  /* a태그는 기본적으로 밑줄이 생기는데 none으로 하면 그게 삭제 됨
-    위에서 말한 css에서 제공해주는 변수를 사용해서 color를 지정했다.
-  */
-  text-decoration: none;
-  color: var(--text-color);
 }
 
 body {
@@ -29,11 +23,30 @@ body {
   justify-content: center;
   align-items: center;
 }
+a {
+  /* a태그는 기본적으로 밑줄이 생기는데 none으로 하면 그게 삭제 됨
+    위에서 말한 css에서 제공해주는 변수를 사용해서 color를 지정했다.
+  */
+  text-decoration: none;
+  color: var(--text-color);
+}
+
+button {
+  width: var(--size-button);
+  height: var(--size-button);
+  background-color: var(--color-not-match);
+  margin: 0.1vh 0.1vh 0.5vh 0.1vh;
+  font-size: 3vh;
+  color: var(--color-font);
+  font-family: Arial, Helvetica, sans-serif;
+  font-weight: var(--size-font-weight);
+  transition: transform var(--animation-duration) ease;
+}
 
 .subject {
   font-family: Arial, Helvetica, sans-serif;
   font-size: 50px;
-  font-weight: 600;
+  font-weight: var(--size-font-weight);
   margin-bottom: 10vh;
   color: white;
   width: 100vh;
@@ -46,18 +59,14 @@ body {
   flex-direction: column;
 }
 
-button {
-  width: 9vh;
-  height: 9vh;
-  background-color: var(--color-not-match);
-  margin: 0.1vh 0.1vh 0.5vh 0.1vh;
-  font-size: 3vh;
-  color: var(--color-font);
-  font-family: Arial, Helvetica, sans-serif;
-  font-weight: 600;
-  transition: transform var(--animation-duration) ease;
+.result {
+  font-size: 40px;
+  font-weight: 1000;
 }
 
+.btn_close {
+  width: 15vh;
+}
 .btn_open {
   font-weight: bold;
   margin: 5px;

@@ -3,17 +3,26 @@ window.addEventListener("load", () => {
   init();
 });
 
-let CUR_ROW = 1;            //현재 작성 가능한 ROW
-let CUR_COLUMN = 0;         //현재 작성 가능한 COLUMN
+let CUR_ROW = 1; //현재 작성 가능한 ROW
+let CUR_COLUMN = 0; //현재 작성 가능한 COLUMN
 let TODAY_WORDLE = "TWICE"; //오늘의 단어, 서버에서 받아오는 걸로 처리하면 나름 괜찮을 듯
-let isGameOver = false;     //게임 실패 체크
-let isSuccess = false;      //게임 성공 체크
+let isGameOver = false; //게임 실패 체크
+let isSuccess = false; //게임 성공 체크
 
 //초기화
 function init() {
-  //updateWord();
-  drawBoard();
-  setEventListeners();
+
+  //서버에서 단어를 다 받아온 다음에 게임을 시작하기 위해서 이렇게 했는데
+  //아마 다 받아고 제대로 실행은 될거 같다. promise를 이용했으니.
+  //다만 코드적인 것도 이상하고, 뭔가 이렇게 짜면 안될것 같은 느낌이 들었고
+  //aws로 했는데 aws도 제대로 설정 못해서 22-08-18에 다시 해보자.
+  updateWord()
+  .then((response) => response.json())
+  .then((data) => {
+    TODAY_WORDLE = data.result.toUpperCase();
+    drawBoard();
+    setEventListeners();
+  });
 }
 
 //게임화면 초기화
@@ -53,14 +62,28 @@ function registRestartBtn() {
 
 //키 입력 이벤트 등록
 function registKeyEvent() {
-  const body = document.querySelector("body");
-  const board = document.querySelector(".board");
+  const dq = (element) => document.querySelector(element);
+  const body = dq("body");
+  const board = dq(".board");
   body.addEventListener("keydown", (event) => {
     if (isGameOver) {
       return;
     }
     const curRow = board.querySelectorAll(`.row${CUR_ROW} button`);
-    if (event.key == "Backspace") {
+
+    switch (event.key) {
+      case "Backspace":
+        pushBackspace();
+        break;
+      case "Enter":
+        pushEnter();
+        break;
+      default:
+        pushAlphabet();
+        break;
+    }
+
+    function pushBackspace() {
       if (CUR_COLUMN > 5) {
         CUR_COLUMN = 5;
       } else if (CUR_COLUMN < 1) {
@@ -71,26 +94,13 @@ function registKeyEvent() {
       CUR_COLUMN--;
     }
 
-    const checkKey = /^[a-zA-Z]$/gim;
-    if (checkKey.test(event.key)) {
-      if (CUR_COLUMN > 4) {
-        return;
-      } else if (CUR_COLUMN < 0) {
-        CUR_COLUMN = 0;
-      }
-      const curBtn = curRow[CUR_COLUMN];
-      curBtn.textContent = event.key.toUpperCase();
-      CUR_COLUMN++;
-    }
-
-    if (event.key == "Enter") {
-      console.log(CUR_COLUMN);
+    function pushEnter() {
       if (CUR_COLUMN < 5) {
         return;
       }
 
       if (checkWord(curRow)) {
-        viewResult("성공했습니다.", "inline")
+        viewResult("Success.", "inline");
         isSuccess = true;
         isGameOver = true;
       }
@@ -101,8 +111,22 @@ function registKeyEvent() {
         if (isSuccess) {
           return;
         }
-        viewResult("실패했습니다..", "inline")
+        viewResult("Fail..", "inline");
         isGameOver = true;
+      }
+    }
+
+    function pushAlphabet() {
+      const checkKey = /^[a-zA-Z]$/gim;
+      if (checkKey.test(event.key)) {
+        if (CUR_COLUMN > 4) {
+          return;
+        } else if (CUR_COLUMN < 0) {
+          CUR_COLUMN = 0;
+        }
+        const curBtn = curRow[CUR_COLUMN];
+        curBtn.textContent = event.key.toUpperCase();
+        CUR_COLUMN++;
       }
     }
   });
@@ -117,8 +141,8 @@ function checkWord(curRow) {
     arrInputWord.push(element.textContent);
   });
 
-  isPerfect = checkMatch(arrInputWord , arrTodayWord, curRow);
-  checkExist(arrInputWord , arrTodayWord, curRow);
+  isPerfect = checkMatch(arrInputWord, arrTodayWord, curRow);
+  checkExist(arrInputWord, arrTodayWord, curRow);
   return isPerfect;
 }
 
@@ -164,7 +188,8 @@ function checkExist(input, today, cur) {
 function viewResult(message, visible) {
   setTimeout(() => {
     document.querySelector("#pop_info_1").style.display = visible;
-    document.querySelector(".dsc").textContent = message;
+    document.querySelector(".result").textContent = message;
+    document.querySelector(".wordle").textContent = `[ ${TODAY_WORDLE} ]`;
   }, 500);
 }
 
@@ -181,11 +206,31 @@ function restart() {
 
 //서버에 요청해서 단어 받아오기
 //당연하지만 서버가 켜져있어야하고, 요청을 처리 할 수 있어야 한다.
+function updateWord() {
+  return fetch("http://localhost:8080/wordle/wod/get-wordle");
+}
+
 // function updateWord() {
-//   fetch("http://localhost:8080/struts1/bbs.do?method=restApi")
-//     .then((response) => response.json())
-//     .then((data) => {
-//       TODAY_WORDLE = data.result.toUpperCase();
-//       console.log(TODAY_WORDLE);
-//     });
+//   return fetch("http://localhost:8080/wordle/wod/get-wordle");
+//   .then((response) => response.json())
+//   .then((data) => {
+//     TODAY_WORDLE = data.result.toUpperCase();
+//     console.log(TODAY_WORDLE);
+//   });
 // }
+
+//프로미스 방식
+// var box2 = document.querySelector(".promise");
+// var animA = box2.animate(KEYFRAMES.o, 1000);
+// animA.finished
+//   .then(function () {
+//     var animB = box2.animate(KEYFRAMES.t, 1000);
+//     return animB.finished;
+//   })
+//   .then(function () {
+//     var animC = box2.animate(KEYFRAMES.r, 1000);
+//     return animC.finished;
+//   })
+//   .then(function () {
+//     box2.animate(KEYFRAMES.br, 1000);
+//   });
