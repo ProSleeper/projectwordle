@@ -11,25 +11,22 @@ let isSuccess = false; //게임 성공 체크
 
 //초기화
 function init() {
-
   //서버에서 단어를 다 받아온 다음에 게임을 시작하기 위해서 이렇게 했는데
   //아마 다 받아고 제대로 실행은 될거 같다. promise를 이용했으니.
   //다만 코드적인 것도 이상하고, 뭔가 이렇게 짜면 안될것 같은 느낌이 들었고
   //aws로 했는데 aws도 제대로 설정 못해서 22-08-18에 다시 해보자.
   updateWord()
-  .then((response) => response.json())
-  .then((data) => {
-    TODAY_WORDLE = data.result.toUpperCase();
-    drawBoard();
-    setEventListeners();
-    console.log("받아옴");
-  }).catch(() => {
-    drawBoard();
-    setEventListeners();
-    console.log("못 받아옴");
-  });
+    .then((response) => response.json())
+    .then((data) => {
+      TODAY_WORDLE = data.result.toUpperCase();
+      drawBoard();
+      setEventListeners();
+    })
+    .catch(() => {
+      drawBoard();
+      setEventListeners();
+    });
 }
-
 
 //게임화면 초기화
 function drawBoard() {
@@ -213,9 +210,9 @@ function restart() {
 //서버에 요청해서 단어 받아오기
 //당연하지만 서버가 켜져있어야하고, 요청을 처리 할 수 있어야 한다.
 function updateWord() {
-  return fetch("http://localhost:8080/wordle/wod/get-wordle");
+  // return fetch("http://localhost:8080/wordle/wod/get-wordle");
+  return fetch("http://tomcattest-env.eba-hidxcrst.us-west-1.elasticbeanstalk.com");
 }
-
 // function updateWord() {
 //   return fetch("http://localhost:8080/wordle/wod/get-wordle");
 //   .then((response) => response.json())
