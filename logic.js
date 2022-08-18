@@ -211,7 +211,7 @@ function restart() {
 //당연하지만 서버가 켜져있어야하고, 요청을 처리 할 수 있어야 한다.
 function updateWord() {
   // return fetch("http://localhost:8080/wordle/wod/get-wordle");
-  return fetch("http://tomcattest-env.eba-hidxcrst.us-west-1.elasticbeanstalk.com");
+  return fetch("http://tomcattest-env.eba-hidxcrst.us-west-1.elasticbeanstalk.com/index.jsp");
 }
 // function updateWord() {
 //   return fetch("http://localhost:8080/wordle/wod/get-wordle");
