@@ -5,24 +5,31 @@ window.addEventListener("load", () => {
 
 let CUR_ROW = 1; //현재 작성 가능한 ROW
 let CUR_COLUMN = 0; //현재 작성 가능한 COLUMN
-let TODAY_WORDLE = "TWICE"; //오늘의 단어, 서버에서 받아오는 걸로 처리하면 나름 괜찮을 듯
+let TODAY_WORDLE = "EDIYA"; //오늘의 단어, 서버에서 받아오는 걸로 처리하면 나름 괜찮을 듯
 let isGameOver = false; //게임 실패 체크
 let isSuccess = false; //게임 성공 체크
 
 //초기화
-function init() {
+//서버 제대로 올리면 이거로 하면 될듯
+// function init() {
 
-  //서버에서 단어를 다 받아온 다음에 게임을 시작하기 위해서 이렇게 했는데
-  //아마 다 받아고 제대로 실행은 될거 같다. promise를 이용했으니.
-  //다만 코드적인 것도 이상하고, 뭔가 이렇게 짜면 안될것 같은 느낌이 들었고
-  //aws로 했는데 aws도 제대로 설정 못해서 22-08-18에 다시 해보자.
-  updateWord()
-  .then((response) => response.json())
-  .then((data) => {
-    TODAY_WORDLE = data.result.toUpperCase();
-    drawBoard();
-    setEventListeners();
-  });
+//   //서버에서 단어를 다 받아온 다음에 게임을 시작하기 위해서 이렇게 했는데
+//   //아마 다 받아고 제대로 실행은 될거 같다. promise를 이용했으니.
+//   //다만 코드적인 것도 이상하고, 뭔가 이렇게 짜면 안될것 같은 느낌이 들었고
+//   //aws로 했는데 aws도 제대로 설정 못해서 22-08-18에 다시 해보자.
+//   updateWord()
+//   .then((response) => response.json())
+//   .then((data) => {
+//     TODAY_WORDLE = data.result.toUpperCase();
+//     drawBoard();
+//     setEventListeners();
+//   });
+// }
+
+//깃허브 페이지에서 제대로 보이는지 살펴볼 임시코드
+function init() {
+  drawBoard();
+  setEventListeners();
 }
 
 //게임화면 초기화
