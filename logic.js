@@ -21,12 +21,10 @@ function init() {
       TODAY_WORDLE = data.result.toUpperCase()
       drawBoard()
       setEventListeners()
-      console.log(TODAY_WORDLE)
     })
     .catch(() => {
       drawBoard()
       setEventListeners()
-      console.log("CATCH")
     })
 }
 
@@ -213,7 +211,7 @@ function restart() {
 //당연하지만 서버가 켜져있어야하고, 요청을 처리 할 수 있어야 한다.
 function updateWord() {
   // return fetch("http://localhost:8080/wordle/wod/get-wordle");
-  return fetch("http://wordle-env.eba-qmhxwgzr.ap-northeast-2.elasticbeanstalk.com/wod/test.do")
+  return fetch("https://www.asud.site/TodayWordle")
 }
 // function updateWord() {
 //   return fetch("http://localhost:8080/wordle/wod/get-wordle");
