@@ -19,10 +19,11 @@ function init() {
     .then((response) => response.json())
     .then((data) => {
       TODAY_WORDLE = data.result.toUpperCase()
-      drawBoard()
-      setEventListeners()
     })
     .catch(() => {
+      console.error("request Fail")
+    })
+    .finally(() => {
       drawBoard()
       setEventListeners()
     })
@@ -122,12 +123,16 @@ function registKeyEvent() {
     function pushAlphabet() {
       const checkKey = /^[a-zA-Z]$/gim
       if (checkKey.test(event.key)) {
+        //animation 부분?!
         if (CUR_COLUMN > 4) {
           return
         } else if (CUR_COLUMN < 0) {
           CUR_COLUMN = 0
         }
         const curBtn = curRow[CUR_COLUMN]
+        
+        curBtn.animate(KEYFRAMES.s, 100);
+        
         curBtn.textContent = event.key.toUpperCase()
         CUR_COLUMN++
       }
@@ -222,18 +227,4 @@ function updateWord() {
 //   });
 // }
 
-//프로미스 방식
-// var box2 = document.querySelector(".promise");
-// var animA = box2.animate(KEYFRAMES.o, 1000);
-// animA.finished
-//   .then(function () {
-//     var animB = box2.animate(KEYFRAMES.t, 1000);
-//     return animB.finished;
-//   })
-//   .then(function () {
-//     var animC = box2.animate(KEYFRAMES.r, 1000);
-//     return animC.finished;
-//   })
-//   .then(function () {
-//     box2.animate(KEYFRAMES.br, 1000);
-//   });
+
