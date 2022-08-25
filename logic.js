@@ -216,7 +216,7 @@ function restart() {
 //당연하지만 서버가 켜져있어야하고, 요청을 처리 할 수 있어야 한다.
 function updateWord() {
   // return fetch("http://localhost:8080/wordle/wod/get-wordle");
-  return fetch("https://www.asud.site/TodayWordle")
+  return fetch("https://www.asud.site/TodayWordle").catch(() => fetch("https://www.loomdis.site/TodayWordle"))
 }
 // function updateWord() {
 //   return fetch("http://localhost:8080/wordle/wod/get-wordle");
@@ -227,4 +227,6 @@ function updateWord() {
 //   });
 // }
 
-
+var KEYFRAMES = {
+  s: [{ transform: "scale(1)" }, { transform: "scale(1.4)" }, { transform: "scale(1)" }]
+};
