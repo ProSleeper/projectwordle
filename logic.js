@@ -105,7 +105,8 @@ function registKeyEvent() {
         return;
       }
 
-      await keyAnim.animationRow(curRow).then(() => console.log("모든 btn 애니메이션 종료 후 실행 됨"));
+      await keyAnim.animationRow(curRow);
+      //.then(() => console.log("모든 btn 애니메이션 종료 후 실행 됨"));
 
       if (checkWord(curRow)) {
         viewResult("Success.", "inline");
