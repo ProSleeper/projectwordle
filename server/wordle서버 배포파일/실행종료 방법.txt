@@ -1,0 +1,7 @@
+cmd에서
+
+tasklist|findstr "javaw" 이 명령어로 찾고, 존재하면
+
+taskkill /t /im javaw.exe /f 이 명령어로 종료하면 된다.
+
+아니면 ServerKill.bat 실행하면 됨
