@@ -4,19 +4,21 @@
   --color-word_exist: #B59F3B;
   --color-match: #538D4E;
   --color-black: #3f454d;
+  --color-keyboard_background: #7b7c7e;
   --color-font: #ffffff;
 
   /* size */
   --size-font-weight: 600px;
-    --size-button: 6vh;
+    --size-inputWord: 6vh;
+      --size-keyboard-height: 7vh;
+      --size-keyboard-width: 8.5vw;
 
   /* animation */
   --animation-duration: 300ms;
-
 }
 
 body {
-  height: 80vh;
+  height: 95vh;
   display: flex;
   background-color: var(--color-black);
   flex-direction: column;
@@ -31,9 +33,9 @@ a {
   color: var(--text-color);
 }
 
-button {
-  width: var(--size-button);
-  height: var(--size-button);
+.inputWord {
+  width: var(--size-inputWord);
+  height: var(--size-inputWord);
   background-color: var(--color-not-match);
   margin: 0.1vh 0.1vh 0.5vh 0.1vh;
   font-size: 3vh;
@@ -43,26 +45,51 @@ button {
   transition: transform var(--animation-duration) ease;
 }
 
+.inputKey {
+  -webkit-width: 10vw;
+  width: var(--size-keyboard-width);
+  height: var(--size-keyboard-height);
+  background-color: var(--color-not-match);
+  margin: 0 0 0.5vh 0;
+  font-size: 3vh;
+  color: var(--color-font);
+  font-family: Arial, Helvetica, sans-serif;
+  font-weight: var(--size-font-weight);
+  transition: transform var(--animation-duration) ease;
+
+}
 .subject {
   font-family: Arial, Helvetica, sans-serif;
   font-size: 50px;
   font-weight: var(--size-font-weight);
-  margin-bottom: 10vh;
+  margin: 10vh 0 5vh 0;
   color: white;
-  width: 100vh;
-  display: flex;
+  display: flex-end;
   justify-content: center;
+}
+
+.keyboard {
+  display: -webkit-box;
+  display: flex;
+  flex-flow: column nowrap;
+  align-items: center;
+  justify-items: flex-end;
+  white-space: nowrap;
+  margin: 20vh 0 5vh 0;
 }
 
 .board {
   display: flex;
-  flex-direction: column;
+  flex-flow: column nowrap;
+    white-space: nowrap;
 }
+  
 
 .result {
   font-size: 40px;
   font-weight: 1000;
 }
+
 
 .btn_close {
   width: 15vh;

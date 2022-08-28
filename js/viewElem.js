@@ -10,11 +10,11 @@ export function drawBoard() {
   const makeRow = function (rowNumber) {
     return `
     <section class="row${rowNumber}">
-        <button disabled="disabled">&nbsp;</button>
-        <button disabled="disabled">&nbsp;</button>
-        <button disabled="disabled">&nbsp;</button>
-        <button disabled="disabled">&nbsp;</button>
-        <button disabled="disabled">&nbsp;</button>
+        <button class="inputWord" disabled="disabled">&nbsp;</button>
+        <button class="inputWord" disabled="disabled">&nbsp;</button>
+        <button class="inputWord" disabled="disabled">&nbsp;</button>
+        <button class="inputWord" disabled="disabled">&nbsp;</button>
+        <button class="inputWord" disabled="disabled">&nbsp;</button>
       </section>
     `;
   };
