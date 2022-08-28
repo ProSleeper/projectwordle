@@ -22,7 +22,6 @@ export function init() {
     .then((response) => response.json())
     .then((data) => {
       TODAY_WORDLE = data.result.toUpperCase();
-      console.log(TODAY_WORDLE);
     })
     .catch(() => {
       console.error("request Fail");
