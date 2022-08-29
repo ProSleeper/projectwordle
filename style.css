@@ -84,12 +84,16 @@ a {
     white-space: nowrap;
 }
   
-
 .result {
   font-size: 40px;
   font-weight: 1000;
 }
 
+.setBtn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+}
 
 .btn_close {
   width: 15vh;
@@ -128,4 +132,15 @@ a {
   width: 200px;
   vertical-align: middle;
   font-size: 15px;
+}
+/**
+  이렇게 @media screen and (max-width:768px) 을 하면 간단하게 최대 크기가 768px 이하이면 아래 내용을 실행해줘라 라는 뜻이다.
+*/
+@media screen and (max-width:768px) {
+  .setBtn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+  }
+
 }
