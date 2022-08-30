@@ -28,6 +28,7 @@ export function init() {
     })
     .finally(() => {
       viewElem.drawBoard();
+      viewElem.keyBoardDraw();
       setEventListeners();
     });
 }

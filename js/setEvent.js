@@ -32,8 +32,12 @@ function restart() {
 export function registKeyEvent() {
   const dq = (element) => document.querySelector(element);
   const body = dq("body");
+  const inputKey = dq(".keyboard");
+  console.log(inputKey);
   const board = dq(".board");
-  body.addEventListener("keydown", (event) => {
+
+  const keyEvent = (event) => {
+    console.log(event);
     if (isGameOver) {
       return;
     }
@@ -113,5 +117,19 @@ export function registKeyEvent() {
         CUR_COLUMN++;
       }
     }
+  };
+  body.addEventListener("keydown", keyEvent);
+  //inputKey.addEventListener("keydown", keyEvent);
+
+  // js
+  inputKey.addEventListener("click", function (e) {
+    const ett = e.target.textContent;
+    const eventKey = ett == "ENTER" ? "Enter" : ett == "BACK" ? "Backspace" : ett;
+
+    // const pushKey = new KeyboardEvent("keydown", { key: eventKey });
+    //console.log(pushKey);
+    keyEvent({ key: eventKey });
   });
 }
+
+

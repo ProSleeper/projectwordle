@@ -47,7 +47,10 @@ a {
 
 .inputKey {
   -webkit-width: 10vw;
-  width: var(--size-keyboard-width);
+  width: auto;
+    padding-left: 1.5vw;
+    padding-right: 1.5vw;
+    min-width: 4vh;
   height: var(--size-keyboard-height);
   background-color: var(--color-not-match);
   margin: 0 0 0.5vh 0;
