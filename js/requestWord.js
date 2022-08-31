@@ -6,7 +6,7 @@ export function updateWord() {
   // return fetch("http://localhost:8080/wordle/wod/get-wordle");
 
   const URL = window.location.href;
-  if (URL.indexOf("127") == -1 || URL.indexOf("localhost") == -1) {
+  if (URL.indexOf("127") != -1 || URL.indexOf("localhost") != -1) {
     return fetch("http://127.0.0.1:5000/TodayWordle");
   }
   return fetch("https://www.loomdis.site/TodayWordle");
