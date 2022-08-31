@@ -33,11 +33,9 @@ export function registKeyEvent() {
   const dq = (element) => document.querySelector(element);
   const body = dq("body");
   const inputKey = dq(".keyboard");
-  console.log(inputKey);
   const board = dq(".board");
 
   const keyEvent = (event) => {
-    console.log(event);
     if (isGameOver) {
       return;
     }
@@ -119,15 +117,9 @@ export function registKeyEvent() {
     }
   };
   body.addEventListener("keydown", keyEvent);
-  //inputKey.addEventListener("keydown", keyEvent);
-
-  // js
-  inputKey.addEventListener("click", function (e) {
-    const ett = e.target.textContent;
-    const eventKey = ett == "ENTER" ? "Enter" : ett == "BACK" ? "Backspace" : ett;
-
-    // const pushKey = new KeyboardEvent("keydown", { key: eventKey });
-    //console.log(pushKey);
+  inputKey.addEventListener("click", function (event) {
+    const keyText = event.target.textContent;
+    const eventKey = keyText == "ENTER" ? "Enter" : keyText == "BACK" ? "Backspace" : keyText;
     keyEvent({ key: eventKey });
   });
 }

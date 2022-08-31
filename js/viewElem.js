@@ -42,7 +42,6 @@ export function keyBoardDraw() {
   ];
 
   const board = document.querySelector(".keyboard");
-  console.log(board);
   board.innerHTML = "";
   const makeRow = function (rowNumber) {
     let plusOne = "";
