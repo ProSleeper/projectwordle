@@ -38,7 +38,6 @@ export function registKeyEvent() {
 
   const keyEvent = (event) => {
     if (isGameOver || isAnimation) {
-      console.log("리턴");
       return;
     }
     const curRow = board.querySelectorAll(`.row${CUR_ROW} button`);
