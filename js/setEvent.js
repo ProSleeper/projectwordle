@@ -76,8 +76,7 @@ export function registKeyEvent() {
       });
 
       const isCorrect = mainLogic.checkWord(curRowStr);
-      keyAnim.animationRow(curRow, curRowStr).then(() => {
-        console.log(isAnimation);
+      await keyAnim.animationRow(curRow, curRowStr).then(() => {
         isAnimation = false;
       });
 
