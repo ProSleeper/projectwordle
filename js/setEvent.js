@@ -8,6 +8,7 @@ let CUR_ROW = 1; //현재 작성 가능한 ROW
 let CUR_COLUMN = 0; //현재 작성 가능한 COLUMN
 let isGameOver = false; //게임 실패 체크
 let isSuccess = false; //게임 성공 체크
+let isAnimation = false;
 
 //다시하기 버튼 등록
 export function registRestartBtn() {
@@ -36,7 +37,8 @@ export function registKeyEvent() {
   const board = dq(".board");
 
   const keyEvent = (event) => {
-    if (isGameOver) {
+    if (isGameOver || isAnimation) {
+      console.log("리턴");
       return;
     }
     const curRow = board.querySelectorAll(`.row${CUR_ROW} button`);
@@ -68,13 +70,17 @@ export function registKeyEvent() {
       if (CUR_COLUMN < 5) {
         return;
       }
+      isAnimation = true;
       const curRowStr = [];
       curRow.forEach((element) => {
         curRowStr.push({ word: element.textContent, color: "#3A3A3C" });
       });
 
       const isCorrect = mainLogic.checkWord(curRowStr);
-      await keyAnim.animationRow(curRow, curRowStr);
+      keyAnim.animationRow(curRow, curRowStr).then(() => {
+        console.log(isAnimation);
+        isAnimation = false;
+      });
 
       // console.time("버튼 회전");
       // await keyAnim.animationRow(curRow);
