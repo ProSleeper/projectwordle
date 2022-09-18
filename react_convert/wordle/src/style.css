@@ -1,0 +1,149 @@
+:root {
+  /* color */
+  --color-not-match: #3A3A3C;
+  --color-word_exist: #B59F3B;
+  --color-match: #538D4E;
+  --color-black: #3f454d;
+  --color-keyboard_background: #7b7c7e;
+  --color-font: #ffffff;
+
+  /* size */
+  --size-font-weight: 600px;
+    --size-inputWord: 6vh;
+      --size-keyboard-height: 7vh;
+      --size-keyboard-width: 8.5vw;
+
+  /* animation */
+  --animation-duration: 300ms;
+}
+
+body {
+  height: 95vh;
+  display: flex;
+  background-color: var(--color-black);
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+a {
+  /* a태그는 기본적으로 밑줄이 생기는데 none으로 하면 그게 삭제 됨
+    위에서 말한 css에서 제공해주는 변수를 사용해서 color를 지정했다.
+  */
+  text-decoration: none;
+  color: var(--text-color);
+}
+
+.inputWord {
+  width: var(--size-inputWord);
+  height: var(--size-inputWord);
+  background-color: var(--color-not-match);
+  margin: 0.1vh 0.1vh 0.5vh 0.1vh;
+  font-size: 3vh;
+  color: var(--color-font);
+  font-family: Arial, Helvetica, sans-serif;
+  font-weight: var(--size-font-weight);
+  transition: transform var(--animation-duration) ease;
+}
+
+.inputKey {
+  -webkit-width: 10vw;
+  width: auto;
+    padding-left: 1.5vw;
+    padding-right: 1.5vw;
+    min-width: 4vh;
+  height: var(--size-keyboard-height);
+  background-color: var(--color-not-match);
+  margin: 0 0 0.5vh 0;
+  font-size: 3vh;
+  color: var(--color-font);
+  font-family: Arial, Helvetica, sans-serif;
+  font-weight: var(--size-font-weight);
+  transition: transform var(--animation-duration) ease;
+
+}
+.subject {
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 50px;
+  font-weight: var(--size-font-weight);
+  margin: 10vh 0 5vh 0;
+  color: white;
+  display: flex-end;
+  justify-content: center;
+}
+
+.keyboard {
+  display: -webkit-box;
+  display: flex;
+  flex-flow: column nowrap;
+  align-items: center;
+  justify-items: flex-end;
+  white-space: nowrap;
+  margin: 20vh 0 5vh 0;
+}
+
+.board {
+  display: flex;
+  flex-flow: column nowrap;
+    white-space: nowrap;
+}
+  
+.result {
+  font-size: 40px;
+  font-weight: 1000;
+}
+
+.setBtn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+}
+
+.btn_close {
+  width: 15vh;
+}
+.btn_open {
+  font-weight: bold;
+  margin: 5px;
+  padding: 4px 6px;
+  background: #000;
+  color: #fff;
+}
+
+.pop_wrap {
+  z-index: 10;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, .5);
+  font-size: 0;
+  text-align: center;
+}
+
+.pop_wrap:after {
+  display: inline-block;
+  height: 100%;
+  vertical-align: middle;
+  content: '';
+}
+
+.pop_wrap .pop_inner {
+  display: inline-block;
+  padding: 20px 30px;
+  background: #fff;
+  width: 200px;
+  vertical-align: middle;
+  font-size: 15px;
+}
+/**
+  이렇게 @media screen and (max-width:768px) 을 하면 간단하게 최대 크기가 768px 이하이면 아래 내용을 실행해줘라 라는 뜻이다.
+*/
+@media screen and (max-width:768px) {
+  .setBtn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+  }
+
+}
