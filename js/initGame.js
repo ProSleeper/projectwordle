@@ -35,6 +35,5 @@ export function init() {
 
 //이벤트 리스너 등록
 function setEventListeners() {
-  eventModule.registKeyEvent();
-  eventModule.registRestartBtn();
+  eventModule.registEvent();
 }

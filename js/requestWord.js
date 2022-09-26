@@ -7,7 +7,8 @@ export function updateWord() {
 
   const URL = window.location.href;
   if (URL.indexOf("127") != -1 || URL.indexOf("localhost") != -1) {
-    return fetch("http://127.0.0.1:5000/TodayWordle");
+    return fetch("http://127.0.0.1:5000/TodayWordle").catch((error) => error);
+  } else {
+    return fetch("https://www.loomdis.site/TodayWordle").catch((error) => error);
   }
-  return fetch("https://www.loomdis.site/TodayWordle");
 }
