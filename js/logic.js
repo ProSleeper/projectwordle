@@ -3,16 +3,16 @@
 import * as initData from "./initGame.js";
 
 //입력한 글자 검사.
-export function checkWord(curRowStr) {
+export const checkWord = (curRowStr) => {
   let arrTodayWord = [...initData.TODAY_WORDLE];
   let isPerfect = false;
   isPerfect = checkMatch(curRowStr, arrTodayWord);
   checkExist(curRowStr, arrTodayWord);
   return isPerfect;
-}
+};
 
 //자리와 글자 모두 일치 검사
-export function checkMatch(input, today) {
+export const checkMatch = (input, today) => {
   let MATCH_BG_COLOR = "#538D4E";
   let isAnswer = true;
   //match
@@ -27,10 +27,10 @@ export function checkMatch(input, today) {
   }
 
   return isAnswer;
-}
+};
 
 //자리 일치 검사
-export function checkExist(input, today) {
+export const checkExist = (input, today) => {
   let EXIST_BG_COLOR = "#B59F3B";
   //match
   for (let i = 0; i < input.length; i++) {
@@ -47,4 +47,4 @@ export function checkExist(input, today) {
       }
     }
   }
-}
+};

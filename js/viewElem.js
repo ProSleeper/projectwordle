@@ -3,11 +3,11 @@
 import * as initData from "./initGame.js";
 
 //게임화면 초기화
-export function drawBoard() {
+export const drawBoard = () => {
   const BOARD_ROW = 6;
   const board = document.querySelector(".board");
   board.innerHTML = "";
-  const makeRow = function (rowNumber) {
+  const makeRow = (rowNumber) => {
     return `
     <section class="row${rowNumber}">
         <button class="inputWord" disabled="disabled">&nbsp;</button>
@@ -21,19 +21,19 @@ export function drawBoard() {
   for (let index = 0; index < BOARD_ROW; index++) {
     board.innerHTML += makeRow(index + 1);
   }
-}
+};
 
 //결과 화면 출력
-export function viewResult(message, visible) {
+export const viewResult = (message, visible) => {
   setTimeout(() => {
     document.querySelector("#pop_info_1").style.display = visible;
     document.querySelector(".result").textContent = message;
     document.querySelector(".wordle").textContent = `[ ${initData.TODAY_WORDLE} ]`;
   }, 500);
-}
+};
 
 //게임화면 초기화
-export function keyBoardDraw() {
+export const keyBoardDraw = () => {
   const BOARD_ROW = 3;
   const arrKey = [
     ["W", "E", "R", "T", "Y", "U", "I", "O", "P"],
@@ -43,7 +43,7 @@ export function keyBoardDraw() {
 
   const board = document.querySelector(".keyboard");
   board.innerHTML = "";
-  const makeRow = function (rowNumber) {
+  const makeRow = (rowNumber) => {
     let plusOne = "";
     if (rowNumber == 1) {
       plusOne = '<button class="inputKey">Q</button>';
@@ -62,6 +62,6 @@ export function keyBoardDraw() {
   for (let index = 0; index < BOARD_ROW; index++) {
     board.innerHTML += makeRow(index + 1);
   }
-}
+};
 
 

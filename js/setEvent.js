@@ -9,24 +9,26 @@ let CUR_COLUMN = 0; //현재 작성 가능한 COLUMN
 let isGameOver = false; //게임 실패 체크
 let isSuccess = false; //게임 성공 체크
 let isAnimation = false;
+const pushBtnMap = new Map();
 
 //전체 이벤트 등록
-export function registEvent() {
+export const registEvent = () => {
   RestartBtn();
   keyboardEvent();
-  document.querySelector("body").addEventListener("keydown", keyEvent);
-}
+  document.querySelector("body").addEventListener("keydown", keydownEvent);
+  document.querySelector("body").addEventListener("keyup", keyupEvent);
+};
 
 //다시하기 버튼 등록
-function RestartBtn() {
+const RestartBtn = () => {
   const restartBtn = document.querySelector(".btn_close");
   restartBtn.addEventListener("click", () => {
     restart();
   });
-}
+};
 
 //게임 데이터 초기화
-function restart() {
+const restart = () => {
   document.querySelector("#pop_info_1").style.display = "none";
   CUR_ROW = 1;
   CUR_COLUMN = 0;
@@ -34,12 +36,15 @@ function restart() {
   isSuccess = false;
   //updateWord();
   viewElem.drawBoard();
-}
+};
 
-function keyEvent(event) {
-  if (isGameOver || isAnimation) {
+const keydownEvent = (event) => {
+  if (isGameOver || isAnimation || isPushKeyCheck(event.key)) {
     return;
   }
+
+  pushBtnMap.set(event.key, null);
+
   const curRow = document.querySelector(".board").querySelectorAll(`.row${CUR_ROW} button`);
 
   switch (event.key) {
@@ -53,20 +58,29 @@ function keyEvent(event) {
       pushAlphabet(curRow, event);
       break;
   }
-}
+};
+
+const keyupEvent = (event) => {
+  pushBtnMap.delete(event.key);
+};
+
+const isPushKeyCheck = (key) => {
+  return pushBtnMap.get(key) === undefined ? false : true;
+};
 
 //키 입력 이벤트 등록
-export function keyboardEvent() {
+export const keyboardEvent = () => {
   const inputKey = document.querySelector(".keyboard");
 
-  inputKey.addEventListener("mousedown", function (event) {
+  inputKey.addEventListener("mouseup", (event) => {
     const keyText = event.target.textContent;
     const eventKey = keyText == "ENTER" ? "Enter" : keyText == "BACK" ? "Backspace" : keyText;
-    keyEvent({ key: eventKey });
+    keydownEvent({ key: eventKey });
+    keyupEvent({ key: eventKey });
   });
-}
+};
 
-async function pushEnter(curRow) {
+const pushEnter = async (curRow) => {
   if (CUR_COLUMN < 5) {
     return;
   }
@@ -101,9 +115,9 @@ async function pushEnter(curRow) {
     viewElem.viewResult("Fail..", "inline");
     isGameOver = true;
   }
-}
+};
 
-function pushAlphabet(curRow, event) {
+const pushAlphabet = (curRow, event) => {
   const checkKey = /^[a-zA-Z]$/gim;
   if (checkKey.test(event.key)) {
     //animation 부분?!
@@ -119,9 +133,9 @@ function pushAlphabet(curRow, event) {
     curBtn.textContent = event.key.toUpperCase();
     CUR_COLUMN++;
   }
-}
+};
 
-function pushBackspace(curRow) {
+const pushBackspace = (curRow) => {
   if (CUR_COLUMN > 5) {
     CUR_COLUMN = 5;
   } else if (CUR_COLUMN < 1) {
@@ -130,4 +144,4 @@ function pushBackspace(curRow) {
   const curBtn = curRow[CUR_COLUMN - 1];
   curBtn.innerHTML = "&nbsp";
   CUR_COLUMN--;
-}
+};
