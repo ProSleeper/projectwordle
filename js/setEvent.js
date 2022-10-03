@@ -3,6 +3,7 @@
 import * as viewElem from "./viewElem.js";
 import * as keyAnim from "./animation.js";
 import * as mainLogic from "./logic.js";
+import { getLocalStorage } from "./cookie.js";
 
 let CUR_ROW = 1; //현재 작성 가능한 ROW
 let CUR_COLUMN = 0; //현재 작성 가능한 COLUMN
@@ -95,16 +96,22 @@ const pushEnter = async (curRow) => {
     isAnimation = false;
   });
 
-  // console.time("버튼 회전");
-  // await keyAnim.animationRow(curRow);
-  // console.timeEnd("버튼 회전");
-  //.then(() => console.log("모든 btn 애니메이션 종료 후 실행 됨"));
-
   if (isCorrect) {
     viewElem.viewResult("Success.", "inline");
     isSuccess = true;
     isGameOver = true;
   }
+
+  console.log(curRowStr);
+  const userData = getLocalStorage("wordle_ingame_data");
+
+  const word = curRowStr.map((item) => {
+    return item.word;
+  });
+
+  userData.boardState[CUR_ROW - 1] = word.join("");
+  userData.rowIndex = CUR_ROW;
+  window.localStorage.setItem("wordle_ingame_data", JSON.stringify(userData));
 
   CUR_ROW++;
   CUR_COLUMN = 0;

@@ -3,11 +3,11 @@
 import * as requestWord from "./requestWord.js";
 import * as viewElem from "./viewElem.js";
 import * as eventModule from "./setEvent.js";
+import { setLocalStorage } from "./cookie.js";
 
 window.addEventListener("load", () => {
   init();
 });
-
 
 export let TODAY_WORDLE = "EDIYA"; //오늘의 단어, 서버에서 받아오는 걸로 처리하면 나름 괜찮을 듯
 
@@ -27,6 +27,7 @@ export const init = () => {
       console.error("request Fail");
     })
     .finally(() => {
+      setLocalStorage("wordle_ingame_data", TODAY_WORDLE);
       viewElem.drawBoard();
       viewElem.keyBoardDraw();
       setEventListeners();

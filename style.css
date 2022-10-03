@@ -37,7 +37,7 @@ a {
   width: var(--size-inputWord);
   height: var(--size-inputWord);
   background-color: var(--color-not-match);
-  margin: 0.1vh 0.1vh 0.5vh 0.1vh;
+  margin: 0.01vh 0.01vh 0.5vh 0.01vh;
   font-size: 3vh;
   color: var(--color-font);
   font-family: Arial, Helvetica, sans-serif;
